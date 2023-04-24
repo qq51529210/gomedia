@@ -18,11 +18,7 @@ func init() {
 // TKHD表示tkhd box
 // 包含了该track的特性和总体信息，如时长，宽高等
 type TKHD struct {
-	BasicBox
-	// 版本
-	Version uint8
-	// ...
-	Flags uint32
+	fullBox
 	// 创建时间
 	CreateTime uint64
 	// 修改时间
@@ -59,8 +55,8 @@ func DecodeBoxTKHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	box := new(TKHD)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 1
 	box.Version = buf[0]
 	// 3

@@ -17,7 +17,7 @@ type MINF struct {
 	BasicBox
 }
 
-// DecodeBoxMINFP解析minf box
+// DecodeBoxMINF解析minf box
 func DecodeBoxMINF(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 容器box解析子box
 	children, err := DecodeChildren(readSeeker, boxSize-headerSize)
@@ -26,8 +26,8 @@ func DecodeBoxMINF(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 创建
 	box := new(MINF)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	box.BasicBox.children = children
 	// 返回
 	return box, nil

@@ -19,11 +19,7 @@ func init() {
 // 用来存放文件的总体信息，如时长和创建时间等。
 // 它是独立于媒体的并且与整个播放相关
 type MVHD struct {
-	BasicBox
-	// 版本
-	Version uint8
-	// ...
-	Flags uint32
+	fullBox
 	// 创建时间
 	CreateTime uint64
 	// 修改时间
@@ -58,8 +54,8 @@ func DecodeBoxMVHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	box := new(MVHD)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 1
 	box.Version = buf[0]
 	// 3

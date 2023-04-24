@@ -2,6 +2,7 @@ package mp4
 
 import (
 	"encoding/binary"
+	"gomedia/util"
 	"io"
 )
 
@@ -28,15 +29,16 @@ type STSCEntry struct {
 // 用chunk组织sample可以方便优化数据获取，一个thunk包含一个或多个sample
 // 查看这张表就可以找到包含指定sample的thunk，从而找到这个sample
 type STSC struct {
-	BasicBox
+	fullBox
+	// 元素
 	Entry []STSCEntry
 }
 
-// DecodeBoxSTSCP解析stsc box
+// DecodeBoxSTSC解析stsc box
 func DecodeBoxSTSC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 4 {
+	if contentSize < 8 {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -47,12 +49,16 @@ func DecodeBoxSTSC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 解析
 	box := new(STSC)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
+	// 1
+	box.Version = buf[0]
+	// 3
+	box.Flags = util.Uint24(buf[1:])
 	// 4
-	entryCount := binary.BigEndian.Uint32(buf)
-	n := 4
-	if contentSize < int64(entryCount*12+4) {
+	entryCount := binary.BigEndian.Uint32(buf[4:])
+	n := 8
+	if contentSize < int64(entryCount)*12+8 {
 		return nil, errBoxSize
 	}
 	// 12*entryCount

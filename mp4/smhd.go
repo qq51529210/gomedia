@@ -18,11 +18,7 @@ func init() {
 // SMHD表示smhd box
 // 包含当前track的音频描述信息，如编码格式等信息
 type SMHD struct {
-	BasicBox
-	// 版本
-	Version uint8
-	// ...
-	Flags uint32
+	fullBox
 	// 立体声平衡，[8.8] 格式值，一般为0，
 	// -1.0表示全部左声道，1.0表示全部右声道
 	Balance uint16
@@ -42,8 +38,8 @@ func DecodeBoxSMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	box := new(SMHD)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 1
 	box.Version = buf[0]
 	// 3

@@ -17,7 +17,7 @@ type STBL struct {
 	BasicBox
 }
 
-// DecodeBoxSTBLP解析stbl box
+// DecodeBoxSTBL解析stbl box
 func DecodeBoxSTBL(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 容器box解析子box
 	children, err := DecodeChildren(readSeeker, boxSize-headerSize)
@@ -26,8 +26,8 @@ func DecodeBoxSTBL(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 创建
 	box := new(STBL)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	box.BasicBox.children = children
 	// 返回
 	return box, nil

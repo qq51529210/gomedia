@@ -39,8 +39,8 @@ func DecodeBoxFTYP(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 解析
 	box := new(FTYP)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 4
 	box.MajorBrand = binary.BigEndian.Uint32(buf)
 	// 4

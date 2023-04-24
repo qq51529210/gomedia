@@ -31,8 +31,8 @@ func DecodeBoxTRAK(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 创建
 	box := new(TRAK)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	box.BasicBox.children = children
 	// 返回
 	return box, nil

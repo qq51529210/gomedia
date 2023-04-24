@@ -6,19 +6,19 @@ import (
 	"io"
 )
 
+const (
+	TypeVMHD = 1986881636
+)
+
 func init() {
 	// 注册解析器
-	AddDecodeFunc(TypeOfName("vmhd"), DecodeBoxVMHD)
+	AddDecodeFunc(TypeVMHD, DecodeBoxVMHD)
 }
 
 // VMHD表示vmhd box
 // 包含当前track的视频描述信息，如视频编码等信息
 type VMHD struct {
-	BasicBox
-	// 版本
-	Version uint8
-	// ...
-	Flags uint32
+	fullBox
 	// 视频合成模式，为0时拷贝原始图像，
 	// 否则与opcolor进行合成
 	GraphicsMode uint16
@@ -40,8 +40,8 @@ func DecodeBoxVMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	box := new(VMHD)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 1
 	box.Version = buf[0]
 	// 3

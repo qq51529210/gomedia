@@ -7,30 +7,28 @@ import (
 )
 
 const (
-	TypeCTTS = 1668576371
+	TypeCO64 = 1668232756
 )
 
 func init() {
 	// 注册解析器
-	AddDecodeFunc(TypeCTTS, DecodeBoxCTTS)
+	AddDecodeFunc(TypeCO64, DecodeBoxCO64)
 }
 
-// CTTSEntry是CTTS的Entry字段
-// 主要是用于计算pts
-type CTTSEntry struct {
-	SampleCount  uint32
-	SampleOffset uint32
+// CO64表示co64 box
+// 定义了每个chunk的偏移
+type CO64 struct {
+	BasicBox
+	// 版本
+	Version uint8
+	// ...
+	Flags uint32
+	// 每个chunk的偏移
+	ChunkOffset []uint64
 }
 
-// CTTS表示ctts box
-type CTTS struct {
-	fullBox
-	// 元素
-	Entry []CTTSEntry
-}
-
-// DecodeBoxCTTS解析ctts box
-func DecodeBoxCTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
+// DecodeBoxCO64解析co64 box
+func DecodeBoxCO64(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
 	if contentSize < 8 {
@@ -43,7 +41,7 @@ func DecodeBoxCTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	// 解析
-	box := new(CTTS)
+	box := new(CO64)
 	box.size = boxSize
 	box._type = _type
 	// 1
@@ -56,13 +54,9 @@ func DecodeBoxCTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	if contentSize < int64(entryCount)*8+8 {
 		return nil, errBoxSize
 	}
-	// 8*entryCount
-	box.Entry = make([]CTTSEntry, entryCount)
 	for i := 0; i < int(entryCount); i++ {
-		box.Entry[i].SampleCount = binary.BigEndian.Uint32(buf[n:])
-		n += 4
-		box.Entry[i].SampleOffset = binary.BigEndian.Uint32(buf[n:])
-		n += 4
+		box.ChunkOffset[i] = binary.BigEndian.Uint64(buf[n:])
+		n += 8
 	}
 	// 返回
 	return box, nil

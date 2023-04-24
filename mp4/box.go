@@ -104,7 +104,16 @@ func (b *BasicBox) GetChild(_type Type) Box {
 	return nil
 }
 
+type fullBox struct {
+	BasicBox
+	// 版本
+	Version uint8
+	// ...
+	Flags uint32
+}
+
 // 添加子定义的解析器，如果_type不正确或者重复返回错误
+// 函数必须Read或者Seek相应的字节，否则下一个box解析size会出错
 func AddDecodeFunc(_type Type, _func DecodeFunc) {
 	// 添加
 	decodeFuncs[_type] = _func

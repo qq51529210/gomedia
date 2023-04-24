@@ -10,6 +10,14 @@ const (
 	TypeHDLR = 1751411826
 )
 
+const (
+	HDLRTypeVide = 1986618469
+	HDLRTypeSoun = 1936684398
+	HDLRTypeHint = 1751740020
+	HDLRTypeMeta = 1835365473
+	HDLRTypeAuxv = 1635088502
+)
+
 func init() {
 	// 注册解析器
 	AddDecodeFunc(TypeHDLR, DecodeBoxHDLR)
@@ -18,11 +26,7 @@ func init() {
 // HDLR表示hdlr box
 // 主要用于判断是什么类型的track
 type HDLR struct {
-	BasicBox
-	// 版本
-	Version uint8
-	// ...
-	Flags uint32
+	fullBox
 	// ...
 	PreDefined uint32
 	// 类型
@@ -45,8 +49,8 @@ func DecodeBoxHDLR(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	box := new(HDLR)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 1
 	box.Version = buf[0]
 	// 3

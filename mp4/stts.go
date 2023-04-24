@@ -2,6 +2,7 @@ package mp4
 
 import (
 	"encoding/binary"
+	"gomedia/util"
 	"io"
 )
 
@@ -27,11 +28,12 @@ type STTSEntry struct {
 // 表中每个条目提供了在同一个时间偏移量里面连续的sample序号，以及samples的偏移量。
 // 递增这些偏移量，就可以建立一个完整的time to sample表（时间戳到sample序号的映射表）
 type STTS struct {
-	BasicBox
+	fullBox
+	//
 	Entry []STTSEntry
 }
 
-// DecodeBoxSTTSP解析stts box
+// DecodeBoxSTTS解析stts box
 func DecodeBoxSTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
@@ -46,11 +48,15 @@ func DecodeBoxSTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 解析
 	box := new(STTS)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
+	// 1
+	box.Version = buf[0]
+	// 3
+	box.Flags = util.Uint24(buf[1:])
 	// 4
-	entryCount := binary.BigEndian.Uint32(buf)
-	n := 4
+	entryCount := binary.BigEndian.Uint32(buf[4:])
+	n := 8
 	if contentSize < int64(entryCount*8+4) {
 		return nil, errBoxSize
 	}

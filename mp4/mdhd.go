@@ -20,11 +20,7 @@ func init() {
 // tkhd通常是对指定的track设定相关属性和内容，
 // 而mdhd是针对于独立的media来设置的，一般情况下二者相同
 type MDHD struct {
-	BasicBox
-	// 版本
-	Version uint8
-	// ...
-	Flags uint32
+	fullBox
 	// 创建时间
 	CreateTime uint64
 	// 修改时间
@@ -53,8 +49,8 @@ func DecodeBoxMDHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 		return nil, err
 	}
 	box := new(MDHD)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 1
 	box.Version = buf[0]
 	// 3

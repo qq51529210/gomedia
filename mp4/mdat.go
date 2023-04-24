@@ -18,7 +18,7 @@ type MDAT struct {
 	BasicBox
 }
 
-// DecodeBoxMDATP解析mdat box
+// DecodeBoxMDAT解析mdat box
 func DecodeBoxMDAT(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 略过
 	contentSize := boxSize - headerSize
@@ -30,8 +30,8 @@ func DecodeBoxMDAT(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	}
 	// 创建
 	box := new(MDAT)
-	box.BasicBox.size = boxSize
-	box.BasicBox._type = _type
+	box.size = boxSize
+	box._type = _type
 	// 返回
 	return box, nil
 }
