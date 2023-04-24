@@ -8,9 +8,7 @@ import (
 
 // 错误
 var (
-	errBoxType          = errors.New("error box type")
-	errBoxSize          = errors.New("error box size")
-	errDecodeFuncExists = errors.New("error decode func type")
+	errBoxSize = errors.New("error box size")
 )
 
 // 其他解析函数
