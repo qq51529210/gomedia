@@ -5,7 +5,8 @@ import (
 )
 
 const (
-	TypeMDIA = 1835297121
+	// TypeMDIA 表示 mdia 类型
+	TypeMDIA Type = 1835297121
 )
 
 func init() {

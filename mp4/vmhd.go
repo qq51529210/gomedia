@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeVMHD = 1986881636
+	// TypeVMHD 表示 vmhd 类型
+	TypeVMHD Type = 1986881636
+)
+
+const (
+	vmhdBoxMinContentSize = 12
 )
 
 func init() {
@@ -30,7 +35,7 @@ type VMHD struct {
 func DecodeBoxVMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 12 {
+	if contentSize < vmhdBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取

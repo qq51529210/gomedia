@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSTSD = 1937011556
+	// TypeSTSD 表示 stsd 类型
+	TypeSTSD Type = 1937011556
+)
+
+const (
+	stsdBoxMinContentSize = 8
 )
 
 func init() {
@@ -26,11 +31,11 @@ type STSD struct {
 func DecodeBoxSTSD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < stsdBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
-	buf := make([]byte, 8)
+	buf := make([]byte, stsdBoxMinContentSize)
 	_, err := io.ReadFull(readSeeker, buf)
 	if err != nil {
 		return nil, err

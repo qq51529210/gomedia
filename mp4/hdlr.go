@@ -7,15 +7,21 @@ import (
 )
 
 const (
-	TypeHDLR = 1751411826
+	// TypeHDLR 表示 hdlr 类型
+	TypeHDLR Type = 1751411826
+)
+
+// 数据类型
+const (
+	HDLRTypeVide Type = 1986618469
+	HDLRTypeSoun Type = 1936684398
+	HDLRTypeHint Type = 1751740020
+	HDLRTypeMeta Type = 1835365473
+	HDLRTypeAuxv Type = 1635088502
 )
 
 const (
-	HDLRTypeVide = 1986618469
-	HDLRTypeSoun = 1936684398
-	HDLRTypeHint = 1751740020
-	HDLRTypeMeta = 1835365473
-	HDLRTypeAuxv = 1635088502
+	hdlrBoxMinContentSize = 24
 )
 
 func init() {
@@ -39,7 +45,7 @@ type HDLR struct {
 func DecodeBoxHDLR(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 24 {
+	if contentSize < hdlrBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取

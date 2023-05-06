@@ -6,7 +6,12 @@ import (
 )
 
 const (
-	TypeMP4A = 1836069985
+	// TypeMP4A 表示 mp4a 类型
+	TypeMP4A Type = 1836069985
+)
+
+const (
+	mp4aBoxMinContentSize = 28
 )
 
 func init() {
@@ -31,11 +36,11 @@ type MP4A struct {
 func DecodeBoxMP4A(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 26 {
+	if contentSize < mp4aBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
-	buf := make([]byte, 26)
+	buf := make([]byte, mp4aBoxMinContentSize)
 	_, err := io.ReadFull(readSeeker, buf)
 	if err != nil {
 		return nil, err
@@ -52,18 +57,19 @@ func DecodeBoxMP4A(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.ChannelCount = binary.BigEndian.Uint16(buf[16:])
 	// 2
 	box.SampleSize = binary.BigEndian.Uint16(buf[18:])
-	// pre_defined 2
-	// reserved 2
+	// reserved 4
 	// 4
-	box.SampleRate = binary.BigEndian.Uint32(buf[22:])
+	box.SampleRate = binary.BigEndian.Uint32(buf[24:])
 	//
-	contentSize -= 26
-	if contentSize > 0 {
-		// todo解析
-		_, err = readSeeker.Seek(contentSize, io.SeekCurrent)
+	contentSize -= mp4aBoxMinContentSize
+	for contentSize > 0 {
+		// child
+		child, err := DecodeBox(readSeeker)
 		if err != nil {
 			return nil, err
 		}
+		box.children = append(box.children, child)
+		contentSize -= child.Size()
 	}
 	// 返回
 	return box, nil

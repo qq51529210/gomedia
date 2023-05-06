@@ -3,7 +3,8 @@ package mp4
 import "io"
 
 const (
-	TypeMDAT = 1835295092
+	// TypeMDAT 表示 mdat 类型
+	TypeMDAT Type = 1835295092
 )
 
 func init() {

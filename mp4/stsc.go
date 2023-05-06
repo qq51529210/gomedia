@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSTSC = 1937011555
+	// TypeSTSC 表示 stsc 类型
+	TypeSTSC Type = 1937011555
+)
+
+const (
+	stscBoxMinContentSize = 8
 )
 
 func init() {
@@ -37,7 +42,7 @@ type STSC struct {
 func DecodeBoxSTSC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < stscBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -56,11 +61,11 @@ func DecodeBoxSTSC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	// 4
 	entryCount := binary.BigEndian.Uint32(buf[4:])
-	n := 8
-	if contentSize < int64(entryCount)*12+8 {
+	if contentSize < int64(entryCount)*12+stscBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 12*entryCount
+	n := stscBoxMinContentSize
 	box.Entry = make([]STSCEntry, entryCount)
 	for i := 0; i < int(entryCount); i++ {
 		box.Entry[i].FirstChunk = binary.BigEndian.Uint32(buf[n:])

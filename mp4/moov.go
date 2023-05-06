@@ -3,7 +3,8 @@ package mp4
 import "io"
 
 const (
-	TypeMOOV = 1836019574
+	// TypeMOOV 表示 moov 类型
+	TypeMOOV Type = 1836019574
 )
 
 func init() {

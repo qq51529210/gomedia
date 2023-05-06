@@ -3,7 +3,8 @@ package mp4
 import "io"
 
 const (
-	TypeSTBL = 1937007212
+	// TypeSTBL 表示 stbl 类型
+	TypeSTBL Type = 1937007212
 )
 
 func init() {

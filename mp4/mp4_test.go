@@ -35,7 +35,7 @@ func testGetBox(t *testing.T, mp4 *MP4) {
 }
 
 func TestType(t *testing.T) {
-	fmt.Println(uint32(TypeOfName("stts")))
+	fmt.Println(uint32(TypeOfName("esds")))
 
 	if TypeAVC1 != TypeOfName("avc1") {
 		t.FailNow()

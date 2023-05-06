@@ -7,7 +7,13 @@ import (
 )
 
 const (
-	TypeTKHD = 1953196132
+	// TypeTKHD 表示 tkhd 类型
+	TypeTKHD Type = 1953196132
+)
+
+const (
+	tkhdBoxMinContentSize  = 84
+	tkhdBoxMinContentSize2 = tkhdBoxMinContentSize + 12
 )
 
 func init() {
@@ -46,7 +52,7 @@ type TKHD struct {
 func DecodeBoxTKHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 84 {
+	if contentSize < tkhdBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -64,7 +70,7 @@ func DecodeBoxTKHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	n := 0
 	if box.Version == 1 {
-		if contentSize < 96 {
+		if contentSize < tkhdBoxMinContentSize2 {
 			return nil, errBoxSize
 		}
 		// 8

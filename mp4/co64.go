@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeCO64 = 1668232756
+	// TypeCO64 表示 co64 类型
+	TypeCO64 Type = 1668232756
+)
+
+const (
+	co64BoxMinContentSize = 8
 )
 
 func init() {
@@ -31,7 +36,7 @@ type CO64 struct {
 func DecodeBoxCO64(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < co64BoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -50,10 +55,10 @@ func DecodeBoxCO64(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	// 4
 	entryCount := binary.BigEndian.Uint32(buf[4:])
-	n := 8
-	if contentSize < int64(entryCount)*8+8 {
+	if contentSize < int64(entryCount)*8+co64BoxMinContentSize {
 		return nil, errBoxSize
 	}
+	n := co64BoxMinContentSize
 	for i := 0; i < int(entryCount); i++ {
 		box.ChunkOffset[i] = binary.BigEndian.Uint64(buf[n:])
 		n += 8

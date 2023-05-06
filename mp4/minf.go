@@ -3,7 +3,8 @@ package mp4
 import "io"
 
 const (
-	TypeMINF = 1835626086
+	// TypeMINF 表示 minf 类型
+	TypeMINF Type = 1835626086
 )
 
 func init() {

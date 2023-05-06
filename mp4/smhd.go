@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSMHD = 1936549988
+	// TypeSMHD 表示 smhd 类型
+	TypeSMHD Type = 1936549988
+)
+
+const (
+	smhdBoxMinContentSize = 8
 )
 
 func init() {
@@ -28,7 +33,7 @@ type SMHD struct {
 func DecodeBoxSMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < smhdBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取

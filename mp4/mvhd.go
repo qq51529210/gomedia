@@ -7,7 +7,13 @@ import (
 )
 
 const (
-	TypeMVHD = 1836476516
+	// TypeMVHD 表示 mvhd 类型
+	TypeMVHD Type = 1836476516
+)
+
+const (
+	mvhdBoxMinContentSize  = 100
+	mvhdBoxMinContentSize2 = mvhdBoxMinContentSize + 12
 )
 
 func init() {
@@ -43,7 +49,7 @@ type MVHD struct {
 func DecodeBoxMVHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 100 {
+	if contentSize < mvhdBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -61,7 +67,7 @@ func DecodeBoxMVHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	n := 0
 	if box.Version == 1 {
-		if contentSize < 112 {
+		if contentSize < mvhdBoxMinContentSize2 {
 			return nil, errBoxSize
 		}
 		// 8

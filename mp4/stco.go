@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSTCO = 1937007471
+	// TypeSTCO 表示 stco 类型
+	TypeSTCO Type = 1937007471
+)
+
+const (
+	stcoBoxMinContentSize = 8
 )
 
 func init() {
@@ -27,7 +32,7 @@ type STCO struct {
 func DecodeBoxSTCO(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < stcoBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -46,10 +51,10 @@ func DecodeBoxSTCO(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	// 4
 	entryCount := binary.BigEndian.Uint32(buf[4:])
-	n := 8
-	if contentSize < int64(entryCount)*4+8 {
+	if contentSize < int64(entryCount)*4+stcoBoxMinContentSize {
 		return nil, errBoxSize
 	}
+	n := stcoBoxMinContentSize
 	box.ChunkOffset = make([]uint32, entryCount)
 	for i := 0; i < len(box.ChunkOffset); i++ {
 		box.ChunkOffset[i] = binary.BigEndian.Uint32(buf[n:])

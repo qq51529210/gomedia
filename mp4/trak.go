@@ -5,7 +5,8 @@ import (
 )
 
 const (
-	TypeTRAK = 1953653099
+	// TypeTRAK 表示 trak 类型
+	TypeTRAK Type = 1953653099
 )
 
 func init() {

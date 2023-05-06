@@ -6,7 +6,12 @@ import (
 )
 
 const (
-	TypeFTYP = 1718909296
+	// TypeFTYP 表示 ftyp 类型
+	TypeFTYP Type = 1718909296
+)
+
+const (
+	ftypBoxMinContentSize = 12
 )
 
 func init() {
@@ -28,7 +33,7 @@ type FTYP struct {
 func DecodeBoxFTYP(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < ftypBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取

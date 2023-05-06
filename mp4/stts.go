@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSTTS = 1937011827
+	// TypeSTTS 表示 stts 类型
+	TypeSTTS Type = 1937011827
+)
+
+const (
+	sttsBoxMinContentSize = 8
 )
 
 func init() {
@@ -36,7 +41,7 @@ type STTS struct {
 func DecodeBoxSTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 4 {
+	if contentSize < sttsBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -55,11 +60,11 @@ func DecodeBoxSTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	// 4
 	entryCount := binary.BigEndian.Uint32(buf[4:])
-	n := 8
-	if contentSize < int64(entryCount*8+4) {
+	if contentSize < int64(entryCount*8+sttsBoxMinContentSize) {
 		return nil, errBoxSize
 	}
 	// 8*entryCount
+	n := sttsBoxMinContentSize
 	box.Entry = make([]STTSEntry, entryCount)
 	for i := 0; i < int(entryCount); i++ {
 		box.Entry[i].SampleCount = binary.BigEndian.Uint32(buf[n:])

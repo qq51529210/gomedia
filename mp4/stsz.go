@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSTSZ = 1937011578
+	// TypeSTSZ 表示 stsz 类型
+	TypeSTSZ Type = 1937011578
+)
+
+const (
+	stszBoxMinContentSize = 12
 )
 
 func init() {
@@ -31,7 +36,7 @@ type STSZ struct {
 func DecodeBoxSTSZ(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 12 {
+	if contentSize < stszBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -53,7 +58,7 @@ func DecodeBoxSTSZ(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	// 4
 	box.SampleCount = binary.BigEndian.Uint32(buf[8:])
 	//
-	n := 12
+	n := stszBoxMinContentSize
 	box.SizeList = make([]uint32, box.SampleCount)
 	if box.SampleSize == 0 {
 		if contentSize < int64(box.SampleCount)*4+int64(n) {

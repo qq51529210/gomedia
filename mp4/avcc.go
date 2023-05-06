@@ -6,7 +6,12 @@ import (
 )
 
 const (
-	TypeAVCC = 1635148611
+	// TypeAVCC 表示 avcc 类型
+	TypeAVCC Type = 1635148611
+)
+
+const (
+	avccBoxMinContentSize = 7
 )
 
 func init() {
@@ -35,7 +40,7 @@ type AVCC struct {
 func DecodeBoxAVCC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 7 {
+	if contentSize < avccBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取

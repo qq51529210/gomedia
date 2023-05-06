@@ -6,7 +6,12 @@ import (
 )
 
 const (
-	TypeAVC1 = 1635148593
+	// TypeAVC1 表示 avc1 类型
+	TypeAVC1 Type = 1635148593
+)
+
+const (
+	avc1BoxMinContentSize = 78
 )
 
 func init() {
@@ -37,11 +42,11 @@ type AVC1 struct {
 func DecodeBoxAVC1(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 78 {
+	if contentSize < avc1BoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
-	buf := make([]byte, 78)
+	buf := make([]byte, avc1BoxMinContentSize)
 	_, err := io.ReadFull(readSeeker, buf)
 	if err != nil {
 		return nil, err
@@ -70,7 +75,7 @@ func DecodeBoxAVC1(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	// 2
 	box.Depth = binary.BigEndian.Uint16(buf[74:])
 	// reserved 2
-	contentSize -= 78
+	contentSize -= avc1BoxMinContentSize
 	for contentSize > 0 {
 		// child
 		child, err := DecodeBox(readSeeker)

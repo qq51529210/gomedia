@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeMDHD = 1835296868
+	// TypeMDHD 表示 mdhd 类型
+	TypeMDHD Type = 1835296868
+)
+
+const (
+	mdhdBoxMinContentSize = 24
 )
 
 func init() {
@@ -37,7 +42,7 @@ type MDHD struct {
 func DecodeBoxMDHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 24 {
+	if contentSize < mdhdBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取

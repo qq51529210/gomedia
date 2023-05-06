@@ -7,7 +7,12 @@ import (
 )
 
 const (
-	TypeSTSS = 1937011571
+	// TypeSTSS 表示 stss 类型
+	TypeSTSS Type = 1937011571
+)
+
+const (
+	stssBoxMinContentSize = 8
 )
 
 func init() {
@@ -33,7 +38,7 @@ type STSS struct {
 func DecodeBoxSTSS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
-	if contentSize < 8 {
+	if contentSize < stssBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 读取
@@ -52,11 +57,11 @@ func DecodeBoxSTSS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	box.Flags = util.Uint24(buf[1:])
 	// 4
 	entryCount := binary.BigEndian.Uint32(buf[4:])
-	n := 8
-	if contentSize < int64(entryCount)*4+8 {
+	if contentSize < int64(entryCount)*4+stssBoxMinContentSize {
 		return nil, errBoxSize
 	}
 	// 4*entryCount
+	n := stssBoxMinContentSize
 	box.SampleNumber = make([]uint32, entryCount)
 	for i := 0; i < int(entryCount); i++ {
 		box.SampleNumber[i] = binary.BigEndian.Uint32(buf[n:])
