@@ -16,10 +16,10 @@ var (
 	decodeFuncs = make(map[Type]DecodeFunc)
 )
 
-// DecodeFunc表示解码函数
+// DecodeFunc 表示解码函数
 type DecodeFunc func(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error)
 
-// Type表示box的类型
+// Type 表示 box 的类型
 type Type uint32
 
 func (t Type) String() string {
@@ -28,82 +28,68 @@ func (t Type) String() string {
 	return string(buf)
 }
 
-// TypeOfName返回name的Type值，4个字节
+// TypeOfName 返回 name 的 Type
 func TypeOfName(name string) Type {
 	var buf [4]byte
 	copy(buf[0:], name)
 	return Type(binary.BigEndian.Uint32(buf[0:]))
 }
 
-// Box表示一个mp4的box接口
+// Box 表示一个 mp4 的 box 接口
 type Box interface {
-	// SetType(_type uint32)
-	// SetSize(size int64) error
+	// 类型
 	Type() Type
+	// 大小
 	Size() int64
-	// 所有子box
+	// 获取子 box
 	Children() []Box
-	// 添加子box
+	// 添加子 box
 	AddChild(box Box)
-	// 获取子box
-	GetChild(_type Type) Box
+	// 获取指定类型的子 box
+	GetChild(_type Type) []Box
 }
 
-// BasicBox表示简单的box
+// BasicBox 表示简单的 box
 type BasicBox struct {
 	size     int64
 	_type    Type
 	children []Box
 }
 
-// SetType设置类型
-func (b *BasicBox) SetType(_type Type) {
-	b._type = _type
-}
-
-// SetSize设置大小，内部不检查参数
-func (b *BasicBox) SetSize(size int64) {
-	b.size = size
-}
-
-// Type实现Box接口
+// Type 实现 Box 接口
 func (b *BasicBox) Type() Type {
 	return b._type
 }
 
-// Size实现Box接口
+// Size 实现 Box 接口
 func (b *BasicBox) Size() int64 {
 	return b.size
 }
 
-// Children实现Box接口
+// Children 实现 Box 接口
 func (b *BasicBox) Children() []Box {
 	return b.children
 }
 
-// AddChild实现Box接口
+// AddChild 实现 Box 接口
 func (b *BasicBox) AddChild(box Box) {
 	b.children = append(b.children, box)
 }
 
-// GetChild实现Box接口
-func (b *BasicBox) GetChild(_type Type) Box {
+// GetChild 实现 Box 接口
+func (b *BasicBox) GetChild(_type Type) (boxs []Box) {
 	// 查找
 	for _, child := range b.children {
 		// 本节点的子节点
 		if child.Type() == _type {
-			return child
-		}
-		// 子节点继续
-		box := child.GetChild(_type)
-		if box != nil {
-			return box
+			boxs = append(boxs, child)
 		}
 	}
 	// 没有
-	return nil
+	return
 }
 
+// fullBox 表示 full box
 type fullBox struct {
 	BasicBox
 	// 版本
@@ -112,14 +98,17 @@ type fullBox struct {
 	Flags uint32
 }
 
-// 添加子定义的解析器，如果_type不正确或者重复返回错误
-// 函数必须Read或者Seek相应的字节，否则下一个box解析size会出错
+// 添加子定义的解析器,
+// _func 必须 Read 或者 Seek 相应的字节,
+// 否则下一个box解析size会出错
 func AddDecodeFunc(_type Type, _func DecodeFunc) {
 	// 添加
 	decodeFuncs[_type] = _func
 }
 
-// DecodeBox从reader解析Box的size和type，然后调用注册的decodeFunc来解析内容
+// DecodeBox 从 reader 解析 Box 的 size 和 type,
+// 然后调用已经注册的 DecodeFunc 来解析内容,
+// 如果没有找到相应的 type , 那么使用 DecodeUnknownBox
 func DecodeBox(readSeeker io.ReadSeeker) (Box, error) {
 	// 读取
 	buf := make([]byte, 8)
@@ -132,13 +121,13 @@ func DecodeBox(readSeeker io.ReadSeeker) (Box, error) {
 	_type := Type(binary.BigEndian.Uint32(buf[4:]))
 	switch {
 	case size == 0:
-		// 没有size，最后一个box
+		// 没有 size 最后一个 box
 		return &BasicBox{
 			size:  size,
 			_type: _type,
 		}, nil
 	case size == 1:
-		// 再读取8字节的长度
+		// 再读取 8 字节的长度
 		_, err := io.ReadFull(readSeeker, buf)
 		if err != nil {
 			return nil, err
@@ -164,7 +153,7 @@ func DecodeBox(readSeeker io.ReadSeeker) (Box, error) {
 	}
 }
 
-// DecodeUnknownBox不解析，直接seek到box结尾，然后返回
+// DecodeUnknownBox 不解析，直接 seek 到 box 结尾，然后返回
 func DecodeUnknownBox(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	contentSize := boxSize - headerSize
 	if contentSize > 0 {
@@ -181,7 +170,7 @@ func DecodeUnknownBox(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type
 	}, nil
 }
 
-// DecodeChildren一般用于容器box解析子box，一直解析到contentSize为0
+// DecodeChildren 一般用于容器 box 解析子 box , 一直解析到 contentSize 为 0
 func DecodeChildren(readSeeker io.ReadSeeker, contentSize int64) ([]Box, error) {
 	var children []Box
 	// 循环解析所有的子box即可

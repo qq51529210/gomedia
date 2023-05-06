@@ -15,15 +15,15 @@ func init() {
 	AddDecodeFunc(TypeSTCO, DecodeBoxSTCO)
 }
 
-// STCO表示stco box
-// 定义了每个chunk的偏移
+// STCO 表示 stco box
+// 定义了每个 chunk 的偏移
 type STCO struct {
 	fullBox
-	// 每个chunk的偏移
+	// 每个 chunk 的偏移
 	ChunkOffset []uint32
 }
 
-// DecodeBoxSTCO解析stco box
+// DecodeBoxSTCO 解析 stco box
 func DecodeBoxSTCO(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

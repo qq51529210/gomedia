@@ -15,26 +15,25 @@ func init() {
 	AddDecodeFunc(TypeSTSC, DecodeBoxSTSC)
 }
 
-// STSCEntry是STSC的Entry字段
+// STSCEntry 是 STS C的 Entry 字段
 type STSCEntry struct {
-	// chunk开始的偏移
+	// chunk 开始的偏移
 	FirstChunk uint32
-	// chunk有多少个sample
+	// chunk 有多少个 sample
 	SamplePerChunk uint32
-	// sample的描述，默认设置为1
+	// sample 的描述, 默认设置为1
 	SampleDescriptionIndex uint32
 }
 
-// STSC表示stsc box
-// 用chunk组织sample可以方便优化数据获取，一个thunk包含一个或多个sample
-// 查看这张表就可以找到包含指定sample的thunk，从而找到这个sample
+// STSC 表示 stsc box
+// 表明每一个 chunk 中有多少个 sample
 type STSC struct {
 	fullBox
 	// 元素
 	Entry []STSCEntry
 }
 
-// DecodeBoxSTSC解析stsc box
+// DecodeBoxSTSC 解析 stsc box
 func DecodeBoxSTSC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

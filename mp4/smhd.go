@@ -15,8 +15,8 @@ func init() {
 	AddDecodeFunc(TypeSMHD, DecodeBoxSMHD)
 }
 
-// SMHD表示smhd box
-// 包含当前track的音频描述信息，如编码格式等信息
+// SMHD 表示 smhd box
+// 包含当前 track 的音频描述信息，如编码格式等信息
 type SMHD struct {
 	fullBox
 	// 立体声平衡，[8.8] 格式值，一般为0，
@@ -24,7 +24,7 @@ type SMHD struct {
 	Balance uint16
 }
 
-// DecodeBoxSMHD解析smhd box
+// DecodeBoxSMHD 解析 smhd box
 func DecodeBoxSMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

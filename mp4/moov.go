@@ -11,17 +11,15 @@ func init() {
 	AddDecodeFunc(TypeMOOV, DecodeBoxMOOV)
 }
 
-// MOOV表示moov box
-// 用来存放媒体的metadata信息，其内容信息由子box诠释。
-// 该box有且只有一个并且包含在文件层，
-// 一般情况下moov box会紧随ftyp box出现，但也有放在文件末尾的。
+// MOOV 表示 moov box
+// 有且只有一个并且包含在文件层
 type MOOV struct {
 	BasicBox
 }
 
 // DecodeBoxMOOV解析moov box
 func DecodeBoxMOOV(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
-	// 容器box解析子box
+	// 容器 box 解析子 box
 	children, err := DecodeChildren(readSeeker, boxSize-headerSize)
 	if err != nil {
 		return nil, err

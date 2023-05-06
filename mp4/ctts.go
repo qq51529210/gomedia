@@ -15,21 +15,21 @@ func init() {
 	AddDecodeFunc(TypeCTTS, DecodeBoxCTTS)
 }
 
-// CTTSEntry是CTTS的Entry字段
+// CTTSEntry 是 CTT S的 Entry 字段
 // 主要是用于计算pts
 type CTTSEntry struct {
 	SampleCount  uint32
 	SampleOffset uint32
 }
 
-// CTTS表示ctts box
+// CTTS 表示 ctts box
 type CTTS struct {
 	fullBox
 	// 元素
 	Entry []CTTSEntry
 }
 
-// DecodeBoxCTTS解析ctts box
+// DecodeBoxCTTS 解析 ctts box
 func DecodeBoxCTTS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

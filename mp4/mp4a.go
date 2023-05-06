@@ -14,7 +14,7 @@ func init() {
 	AddDecodeFunc(TypeMP4A, DecodeBoxMP4A)
 }
 
-// MP4A表示mp4a box
+// MP4A 表示 mp4a box
 type MP4A struct {
 	BasicBox
 	// ...
@@ -27,7 +27,7 @@ type MP4A struct {
 	SampleRate uint32
 }
 
-// DecodeBoxMP4A解析mp4a box
+// DecodeBoxMP4A 解析 mp4a box
 func DecodeBoxMP4A(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

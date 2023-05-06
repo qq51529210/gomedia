@@ -15,14 +15,14 @@ func init() {
 	AddDecodeFunc(TypeSTSD, DecodeBoxSTSD)
 }
 
-// STSD表示stsd box
+// STSD 表示 stsd box
 type STSD struct {
 	fullBox
 	//
 	EntryCount uint32
 }
 
-// DecodeBoxSTSD解析stsd box
+// DecodeBoxSTSD 解析 stsd box
 func DecodeBoxSTSD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

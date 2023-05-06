@@ -15,19 +15,19 @@ func init() {
 	AddDecodeFunc(TypeCO64, DecodeBoxCO64)
 }
 
-// CO64表示co64 box
-// 定义了每个chunk的偏移
+// CO64 表示 co64 box
+// 定义了每个 chunk 的偏移
 type CO64 struct {
 	BasicBox
 	// 版本
 	Version uint8
 	// ...
 	Flags uint32
-	// 每个chunk的偏移
+	// 每个 chunk 的偏移
 	ChunkOffset []uint64
 }
 
-// DecodeBoxCO64解析co64 box
+// DecodeBoxCO64 解析 co64 box
 func DecodeBoxCO64(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

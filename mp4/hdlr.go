@@ -23,8 +23,8 @@ func init() {
 	AddDecodeFunc(TypeHDLR, DecodeBoxHDLR)
 }
 
-// HDLR表示hdlr box
-// 主要用于判断是什么类型的track
+// HDLR 表示 hdlr box
+// 主要用于判断是什么类型的 track
 type HDLR struct {
 	fullBox
 	// ...
@@ -35,7 +35,7 @@ type HDLR struct {
 	Name []byte
 }
 
-// DecodeBoxHDLR解析hdlr box
+// DecodeBoxHDLR 解析 hdlr box
 func DecodeBoxHDLR(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

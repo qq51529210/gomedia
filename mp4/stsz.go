@@ -15,19 +15,19 @@ func init() {
 	AddDecodeFunc(TypeSTSZ, DecodeBoxSTSZ)
 }
 
-// STSZ表示stsz box
-// 定义了每个sample的大小，包含了媒体中全部sample的数目和一张给出每个sample大小的表
+// STSZ 表示 stsz box
+// 定义了每个 sample 的大小
 type STSZ struct {
 	fullBox
-	// 如果是0就使用Size数组
+	// 如果是 0 就使用 Size 数组
 	SampleSize uint32
-	// sample的数量
+	// sample 的数量
 	SampleCount uint32
-	// 每一个sample的size
+	// 每一个 sample 的 size
 	SizeList []uint32
 }
 
-// DecodeBoxSTSZ解析stsz box
+// DecodeBoxSTSZ 解析 stsz box
 func DecodeBoxSTSZ(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

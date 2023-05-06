@@ -13,15 +13,15 @@ func init() {
 	AddDecodeFunc(TypeMDIA, DecodeBoxMDIA)
 }
 
-// MDIA表示mdia box
-// 包含类整个track的媒体信息，比如媒体类型和sample信息
+// MDIA 表示 mdia box
+// 是一个容器
 type MDIA struct {
 	BasicBox
 }
 
 // DecodeBoxMDIA解析mdia box
 func DecodeBoxMDIA(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
-	// 容器box解析子box
+	// 容器 box 解析子 box
 	children, err := DecodeChildren(readSeeker, boxSize-headerSize)
 	if err != nil {
 		return nil, err

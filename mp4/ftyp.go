@@ -14,9 +14,9 @@ func init() {
 	AddDecodeFunc(TypeFTYP, DecodeBoxFTYP)
 }
 
-// FTYP表示ftyp box
-// box只有一个并且只能被包含在文件层，不能被其他box包含。
-// 同时，它应该出现在文件的最开始的位置。
+// FTYP 表示 ftyp box
+// 只有一个并且只能被包含在文件顶层,
+// 同时应该出现在文件的最开始的位置
 type FTYP struct {
 	BasicBox
 	MajorBrand       uint32
@@ -24,7 +24,7 @@ type FTYP struct {
 	CompatibleBrands []byte
 }
 
-// DecodeBoxFTYP解析ftyp box
+// DecodeBoxFTYP 解析 ftyp box
 func DecodeBoxFTYP(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

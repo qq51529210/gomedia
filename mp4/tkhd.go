@@ -15,8 +15,8 @@ func init() {
 	AddDecodeFunc(TypeTKHD, DecodeBoxTKHD)
 }
 
-// TKHD表示tkhd box
-// 包含了该track的特性和总体信息，如时长，宽高等
+// TKHD 表示 tkhd box
+// 包含了该 track 信息
 type TKHD struct {
 	fullBox
 	// 创建时间
@@ -29,9 +29,10 @@ type TKHD struct {
 	Duration uint64
 	// 分层，默认为0，值小的在上层
 	Layer uint16
-	// 指定rack分组信息，默认为0，表示该track未与其他track有群组关系
+	// 指定 track 分组信息,
+	// 默认为 0 表示该 track 未与其他 track 有群组关系
 	AlternateGroup uint16
-	// 音量，如果为音频，1表示最大音量，否则为0
+	// 音量, 如果为音频 1 表示最大音量, 否则为 0
 	Volume uint16
 	// 视频变换矩阵
 	Matrix [9]uint32
@@ -41,7 +42,7 @@ type TKHD struct {
 	Height uint32
 }
 
-// DecodeBoxTKHD解析tkhd box
+// DecodeBoxTKHD 解析 tkhd box
 func DecodeBoxTKHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

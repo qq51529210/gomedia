@@ -14,7 +14,7 @@ func init() {
 	AddDecodeFunc(TypeAVC1, DecodeBoxAVC1)
 }
 
-// AVC1表示avc1 box
+// AVC1 表示 avc1 box
 type AVC1 struct {
 	BasicBox
 	// ...
@@ -27,13 +27,13 @@ type AVC1 struct {
 	HResolution uint32
 	// 垂直分辨率
 	VResolution uint32
-	// 每个sample的帧数
+	// 每个 sample 的帧数
 	FrameCount uint16
 	// 色深
 	Depth uint16
 }
 
-// DecodeBoxAVC1解析avc1 box
+// DecodeBoxAVC1 解析 avc1 box
 func DecodeBoxAVC1(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

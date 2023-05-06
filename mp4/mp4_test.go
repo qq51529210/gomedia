@@ -49,9 +49,6 @@ func TestType(t *testing.T) {
 	if TypeCTTS != TypeOfName("ctts") {
 		t.FailNow()
 	}
-	if TypeFREE != TypeOfName("free") {
-		t.FailNow()
-	}
 	if TypeFTYP != TypeOfName("ftyp") {
 		t.FailNow()
 	}

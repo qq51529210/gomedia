@@ -15,23 +15,21 @@ func init() {
 	AddDecodeFunc(TypeSTSS, DecodeBoxSTSS)
 }
 
-// STSSEntry是STSS的Entry字段
+// STSSEntry 是 STSS 的 Entry字段
 type STSSEntry struct {
 	SampleCount uint32
 	SampleDelta uint32
 }
 
-// STSS表示stts box
-// 确定media中的关键帧。
-// 它包含一个sample序号表，表内的每一项严格按照sample的序号排列，
-// 说明了媒体中的哪一个sample是关键帧。
-// 如果此表不存在，说明每一个sample都是一个关键帧
+// STSS 表示 stts box
+// 确定media中的关键帧,
+// 如果此表不存在,说明每一 个sample 都是一个关键帧
 type STSS struct {
 	fullBox
 	SampleNumber []uint32
 }
 
-// DecodeBoxSTSS解析stts box
+// DecodeBoxSTSS 解析 stts box
 func DecodeBoxSTSS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

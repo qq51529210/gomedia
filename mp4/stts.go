@@ -17,19 +17,18 @@ func init() {
 
 // STTSEntry是STTS的Entry字段
 type STTSEntry struct {
+	// 个数
 	SampleCount uint32
+	// 这些 sample 的时间
 	SampleDelta uint32
 }
 
-// STTS表示stts box
-// 描述了sample时序的映射方法，通过它可以找到任何时间的sample。
-// stts box可以包含一个压缩的表来映射时间和sample序号，
-// 用其他的表来提供每个sample的长度和指针。
-// 表中每个条目提供了在同一个时间偏移量里面连续的sample序号，以及samples的偏移量。
-// 递增这些偏移量，就可以建立一个完整的time to sample表（时间戳到sample序号的映射表）
+// STTS 表示 stts box
+// 描述了sample时序的映射方法,
+// 通过它可以找到任何时间的sample
 type STTS struct {
 	fullBox
-	//
+	// ...
 	Entry []STTSEntry
 }
 

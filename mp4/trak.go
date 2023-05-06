@@ -13,18 +13,15 @@ func init() {
 	AddDecodeFunc(TypeTRAK, DecodeBoxTRAK)
 }
 
-// TRAK表示trak box
-// 子box包含了该track的媒体数据引用和描述（hint track除外）。
-// 一个MP4文件中的媒体可以包含多个track，且至少有一个track，
-// 这些track之间彼此独立，有自己的时间和空间信息。
-// trak box必须包含一个tkhd box和一个mdia box
+// TRAK 表示 trak box
+// 是一个容器 box
 type TRAK struct {
 	BasicBox
 }
 
-// DecodeBoxTRAK解析trak box
+// DecodeBoxTRAK 解析 trak box
 func DecodeBoxTRAK(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
-	// 容器box解析子box
+	// 容器 box 解析子 box
 	children, err := DecodeChildren(readSeeker, boxSize-headerSize)
 	if err != nil {
 		return nil, err

@@ -15,9 +15,8 @@ func init() {
 	AddDecodeFunc(TypeMVHD, DecodeBoxMVHD)
 }
 
-// MVHD表示mvhd box
-// 用来存放文件的总体信息，如时长和创建时间等。
-// 它是独立于媒体的并且与整个播放相关
+// MVHD 表示 mvhd box
+// 用来存放文件的总体信息
 type MVHD struct {
 	fullBox
 	// 创建时间
@@ -36,11 +35,11 @@ type MVHD struct {
 	Matrix [9]uint32
 	// ...
 	PreDefined [6]uint32
-	// 下一个track id
+	// 下一个 track id
 	NextTrackID uint32
 }
 
-// DecodeBoxMVHD解析mvhd box
+// DecodeBoxMVHD 解析 mvhd box
 func DecodeBoxMVHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

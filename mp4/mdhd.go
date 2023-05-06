@@ -15,10 +15,8 @@ func init() {
 	AddDecodeFunc(TypeMDHD, DecodeBoxMDHD)
 }
 
-// MDHD表示mdhd box
-// 包含了了该track的总体信息，mdhd和tkhd内容大致都是一样的。
-// tkhd通常是对指定的track设定相关属性和内容，
-// 而mdhd是针对于独立的media来设置的，一般情况下二者相同
+// MDHD 表示 mdhd box
+// 包含这一条 track 的信息
 type MDHD struct {
 	fullBox
 	// 创建时间
@@ -35,7 +33,7 @@ type MDHD struct {
 	PreDefined uint16
 }
 
-// DecodeBoxMDHD解析mdhd box
+// DecodeBoxMDHD 解析 mdhd box
 func DecodeBoxMDHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize
@@ -84,7 +82,7 @@ func DecodeBoxMDHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	// 2
 	box.Language = binary.BigEndian.Uint16(buf[n:])
 	n += 2
-	// 最高位是0
+	// 最高位是 0
 	box.Language &= 0x7FFF
 	// 2
 	box.PreDefined = binary.BigEndian.Uint16(buf[n:])

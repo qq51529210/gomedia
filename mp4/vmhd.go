@@ -15,18 +15,18 @@ func init() {
 	AddDecodeFunc(TypeVMHD, DecodeBoxVMHD)
 }
 
-// VMHD表示vmhd box
-// 包含当前track的视频描述信息，如视频编码等信息
+// VMHD 表示 vmhd box
+// 包含当前 trac k的视频描述信息
 type VMHD struct {
 	fullBox
-	// 视频合成模式，为0时拷贝原始图像，
-	// 否则与opcolor进行合成
+	// 视频合成模式, 为 0 时拷贝原始图像,
+	// 否则与 opcolor 进行合成
 	GraphicsMode uint16
 	// ｛red，green，blue｝
 	OpColor [3]uint16
 }
 
-// DecodeBoxVMHD解析vmhd box
+// DecodeBoxVMHD 解析 vmhd box
 func DecodeBoxVMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

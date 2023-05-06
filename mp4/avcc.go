@@ -14,7 +14,7 @@ func init() {
 	AddDecodeFunc(TypeAVCC, DecodeBoxAVCC)
 }
 
-// AVCC表示avcC box
+// AVCC 表示 avcC box
 type AVCC struct {
 	BasicBox
 	// H264
@@ -31,7 +31,7 @@ type AVCC struct {
 	PPS [][]byte
 }
 
-// DecodeBoxAVCC解析avcC box
+// DecodeBoxAVCC 解析 avcC box
 func DecodeBoxAVCC(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 判断
 	contentSize := boxSize - headerSize

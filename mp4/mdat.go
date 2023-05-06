@@ -11,14 +11,13 @@ func init() {
 	AddDecodeFunc(TypeMDAT, DecodeBoxMDAT)
 }
 
-// MDAT表示mdat box
-// 可以有多个，也可以没有（当媒体数据全部为外部文件引用时）。
-// 数据直接跟在box type字段后面
+// MDAT 表示 mdat box
+// 是真正的数据
 type MDAT struct {
 	BasicBox
 }
 
-// DecodeBoxMDAT解析mdat box
+// DecodeBoxMDAT 解析 mdat box
 func DecodeBoxMDAT(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
 	// 略过
 	contentSize := boxSize - headerSize

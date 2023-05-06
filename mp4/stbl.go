@@ -11,15 +11,15 @@ func init() {
 	AddDecodeFunc(TypeSTBL, DecodeBoxSTBL)
 }
 
-// STBL表示stbl box
-// 包含了关于track中sample所有时间和位置的信息，以及sample的编解码等信息
+// STBL 表示 stbl box
+// 是一个容器
 type STBL struct {
 	BasicBox
 }
 
-// DecodeBoxSTBL解析stbl box
+// DecodeBoxSTBL 解析 stbl box
 func DecodeBoxSTBL(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Type) (Box, error) {
-	// 容器box解析子box
+	// 容器 box 解析子 box
 	children, err := DecodeChildren(readSeeker, boxSize-headerSize)
 	if err != nil {
 		return nil, err
