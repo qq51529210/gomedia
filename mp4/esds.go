@@ -45,7 +45,7 @@ func DecodeBoxESDS(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	// 1
 	box.Version = buf[0]
 	// 3
-	box.Flags = util.Uint24(buf[1:])
+	box.Flags = util.BigUint24(buf[1:])
 	// n
 	box.Decriptor = buf[4:]
 	// 返回

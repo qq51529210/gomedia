@@ -32,7 +32,7 @@ func (h *Tag) Decode(reader io.Reader) error {
 	// type 8
 	h.Type = buf[0]
 	// data size 24
-	h.DataSize = util.Uint24(buf[1:])
+	h.DataSize = util.BigUint24(buf[1:])
 	// timestamp 32
 	// 先把最高位放好，直接解析4个字节
 	buf[3] = buf[7]

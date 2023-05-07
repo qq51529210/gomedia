@@ -64,7 +64,7 @@ func DecodeBoxMVHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	// 1
 	box.Version = buf[0]
 	// 3
-	box.Flags = util.Uint24(buf[1:])
+	box.Flags = util.BigUint24(buf[1:])
 	n := 0
 	if box.Version == 1 {
 		if contentSize < mvhdBoxMinContentSize2 {

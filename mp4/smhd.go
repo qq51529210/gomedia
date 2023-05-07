@@ -48,7 +48,7 @@ func DecodeBoxSMHD(readSeeker io.ReadSeeker, headerSize, boxSize int64, _type Ty
 	// 1
 	box.Version = buf[0]
 	// 3
-	box.Flags = util.Uint24(buf[1:])
+	box.Flags = util.BigUint24(buf[1:])
 	// 2
 	box.Balance = binary.BigEndian.Uint16(buf[4:])
 	// 2 reserved
