@@ -48,9 +48,9 @@ func (h *Tag) Encode(writer io.Writer) error {
 	// type
 	buf[0] = h.Type
 	// data size
-	util.PutUint24(buf[1:], h.DataSize)
+	util.PutBigUint24(buf[1:], h.DataSize)
 	// timestamp
-	util.PutUint24(buf[4:], h.Timestamp)
+	util.PutBigUint24(buf[4:], h.Timestamp)
 	// timestamp extend
 	buf[7] = byte(h.Timestamp >> 24)
 	// stream id
